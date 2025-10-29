@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prueba de Hipótesis y Confiabilidad - Interactivo</title>
+  <meta name="description" content="Página interactiva educativa: Prueba de Hipótesis y Confiabilidad. Incluye definiciones, pasos, fórmulas, ejemplos y calculadoras (Z y α de Cronbach)." />
+  <style>
+    :root {
+      --bg: #0e1116;
+      --surface: #151a22;
+      --surface-2: #1c2430;
+      --text: #e8eef7;
+      --muted: #b8c3d6;
+      --primary: #6cc5ff;
+      --primary-2: #3ea6f0;
+      --accent: #9bffd2;
+      --danger: #ff6b6b;
+      --good: #7ddc7a;
+      --warn: #ffcc66;
+      --shadow: rgba(0,0,0,.25);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { 
+      margin: 0; 
+      padding: 0; 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Ubuntu, Cantarell, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    header.hero {
+      position: relative;
+      background: radial-gradient(1200px 400px at 20% -10%, rgba(108,197,255,.15), transparent),
+                  radial-gradient(1200px 400px at 80% -10%, rgba(155,255,210,.12), transparent),
+                  linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+      padding: 24px 16px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 8px 24px var(--shadow);
+      overflow: hidden;
+    }
+
+    header.hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .topbar {
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 16px; 
+      flex-wrap: wrap;
+      max-width: 1200px; 
+      margin: 0 auto 8px auto;
+    }
+
+    .logos { 
+      display: flex; 
+      align-items: center; 
+      gap: 16px; 
+    }
+    .logos img {
+      height: 64px; 
+      width: auto; 
+      object-fit: contain; 
+      filter: drop-shadow(0 2px 6px var(--shadow));
+      background: rgba(255,255,255,.04); 
+      border: 1px solid rgba(255,255,255,.15); 
+      border-radius: 8px; 
+      padding: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .logos img:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    nav.menu {
+      display: flex; 
+      gap: 10px; 
+      flex-wrap: wrap;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px; 
+      padding: 8px; 
+      backdrop-filter: blur(4px);
+    }
+    nav.menu a {
+      display: inline-block; 
+      padding: 8px 12px; 
+      border-radius: 8px; 
+      color: var(--text); 
+      text-decoration: none;
+      transition: background .2s ease, transform .06s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    nav.menu a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+    nav.menu a:hover { 
+      background: rgba(255,255,255,.08); 
+      transform: translateY(-1px); 
+    }
+    nav.menu a:hover::after {
+      width: 100%;
+    }
+
+    .title {
+      max-width: 1200px; 
+      margin: 10px auto 0 auto; 
+      display: grid; 
+      grid-template-columns: 1fr; 
+      gap: 10px;
+    }
+    .title h1 { 
+      margin: 0; 
+      font-weight: 800; 
+      letter-spacing: .2px; 
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle { 
+      color: var(--muted); 
+      margin: 0; 
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px; 
+      padding: 18px; 
+      box-shadow: 0 10px 24px var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .grid { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+    main { 
+      max-width: 1200px; 
+      margin: 24px auto; 
+      padding: 0 16px; 
+    }
+    section { 
+      scroll-margin-top: 90px; 
+    }
+    section h2 { 
+      margin: 0 0 12px 0; 
+      font-size: 1.6rem; 
+      position: relative;
+      display: inline-block;
+    }
+    section h2::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    section h3 { 
+      margin: 18px 0 6px; 
+      font-size: 1.1rem; 
+      color: var(--primary); 
+    }
+    p { line-height: 1.6; }
+    ul { margin: .25rem 0 .75rem 1.25rem; }
+    li { margin: .25rem 0; }
+
+    .tag { 
+      display: inline-block; 
+      font-size: .85rem; 
+      color: #000 !important; 
+      -webkit-text-fill-color: #000 !important; 
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      background: var(--accent); 
+      border-radius: 999px; 
+      padding: 2px 10px; 
+      margin-left: 6px; 
+    }
+
+    .info-grid { 
+      display: grid; 
+      gap: 10px; 
+      grid-template-columns: repeat(2, 1fr); 
+    }
+    .info-grid div { 
+      background: rgba(255,255,255,.04); 
+      border: 1px solid rgba(255,255,255,.08); 
+      border-radius: 10px; 
+      padding: 10px; 
+      transition: background 0.3s ease;
+    }
+    .info-grid div:hover {
+      background: rgba(255,255,255,.08);
+    }
+
+    .kbd { 
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; 
+      background: rgba(255,255,255,.06); 
+      border: 1px solid rgba(255,255,255,.1); 
+      padding: 2px 6px; 
+      border-radius: 6px; 
+    }
+
+    .flex { 
+      display: flex; 
+      gap: 10px; 
+      align-items: center; 
+      flex-wrap: wrap; 
+    }
+
+    .calc {
+      display: grid; 
+      grid-template-columns: 1fr; 
+      gap: 12px;
+    }
+    .calc .row { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 10px; 
+    }
+    .calc label { 
+      font-size: .9rem; 
+      color: var(--muted); 
+    }
+    .calc input, .calc select, .calc textarea {
+      width: 100%; 
+      padding: 10px 12px; 
+      border-radius: 10px; 
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04); 
+      color: var(--text);
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .calc input:focus, .calc select:focus, .calc textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(255,255,255,.06);
+    }
+    .calc textarea { 
+      min-height: 120px; 
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; 
+    }
+
+    .btn { 
+      display: inline-flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+      border: 0; 
+      border-radius: 10px; 
+      padding: 10px 14px; 
+      cursor: pointer; 
+      color: var(--bg); 
+      background: var(--primary); 
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .btn:hover { 
+      filter: brightness(1.05); 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .btn.alt { 
+      background: transparent; 
+      border: 1px solid rgba(255,255,255,.12); 
+      color: var(--text); 
+    }
+    .btn.danger { 
+      background: var(--danger); 
+      color: #fff; 
+    }
+    .btn.good { 
+      background: var(--good); 
+      color: #06240a; 
+    }
+
+    .result { 
+      background: rgba(255,255,255,.04); 
+      border: 1px solid rgba(255,255,255,.08); 
+      border-radius: 14px; 
+      padding: 12px; 
+      transition: all 0.3s ease;
+    }
+    .result:hover {
+      background: rgba(255,255,255,.06);
+    }
+    .result .big { 
+      font-size: 1.25rem; 
+      font-weight: 700; 
+    }
+
+    canvas { 
+      width: 100%; 
+      height: 220px; 
+      background: rgba(255,255,255,.03); 
+      border-radius: 10px; 
+      border: 1px solid rgba(255,255,255,.08); 
+    }
+
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      overflow: hidden; 
+      border-radius: 10px; 
+    }
+    th, td { 
+      padding: 10px; 
+      border-bottom: 1px solid rgba(255,255,255,.08); 
+      text-align: left; 
+    }
+    thead th { 
+      background: rgba(255,255,255,.06); 
+    }
+    tbody tr {
+      transition: background 0.3s ease;
+    }
+    tbody tr:hover {
+      background: rgba(255,255,255,.04);
+    }
+
+    footer { 
+      color: var(--muted); 
+      text-align: center; 
+      padding: 30px 10px; 
+      border-top: 1px solid rgba(255,255,255,.08); 
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,.03)); 
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 0%;
+      z-index: 1000;
+      transition: width 0.3s ease;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .calc .row, .info-grid { grid-template-columns: 1fr; }
+      nav.menu { width: 100%; }
+      .logos img { height: 50px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  
+  <header class="hero">
+    <div class="topbar">
+      <div class="logos">
+        <!-- Logos con rutas referenciales locales -->
+        <img src="logo uptfag.jpg" alt="Logo UPTAG" />
+        <img src="logo_pnf_informatica.jpg" alt="Logo PNFI" />
+      </div>
+      <nav class="menu">
+        <a href="#introduccion">Introducción</a>
+        <a href="#hipotesis">Prueba de Hipótesis</a>
+        <a href="#confiabilidad">Confiabilidad</a>
+        <a href="#herramientas">Herramientas Prácticas</a>
+      </nav>
+    </div>
+    <div class="title">
+      <h1>Actividad Interactiva: Prueba de Hipótesis y Confiabilidad <span class="tag animate-pulse">Tema #3</span></h1>
+      <p class="subtitle">Representación didáctica de procesos estadísticos con herramientas web</p>
+      <div class="card animate-fade-in" style="animation-delay: 0.1s">
+        <div class="info-grid">
+          <div>
+            <strong>Estudiante:</strong>
+            <div>Frank Peña - C.I. 31.437.316</div>
+          </div>
+          <div>
+            <strong>Trayecto / Trimestre / Sección:</strong>
+            <div>T3-T1 — Sección #34</div>
+          </div>
+          <div>
+            <strong>Período académico:</strong>
+            <div>2025</div>
+          </div>
+          <div>
+            <strong>Docente:</strong>
+            <div>Airam Colina</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="introduccion" class="card animate-fade-in" style="animation-delay: 0.2s">
+      <h2>Introducción</h2>
+      <p>
+        En la investigación científica, la <strong>Prueba de Hipótesis</strong> permite tomar decisiones basadas en evidencia, contrastando
+        afirmaciones sobre parámetros poblacionales mediante datos muestrales. Por su parte, la <strong>Confiabilidad</strong> evalúa la
+        <em>consistencia</em> de los instrumentos de medición, garantizando que los resultados sean estables y reproducibles.
+      </p>
+      <ul>
+        <li><strong>Importancia de la Prueba de Hipótesis:</strong> sustenta la toma de decisiones y el control de errores al evaluar diferencias, efectos o relaciones.</li>
+        <li><strong>Relevancia de la Confiabilidad:</strong> asegura calidad en instrumentos (tests, cuestionarios), elevando la credibilidad de los hallazgos.</li>
+      </ul>
+    </section>
+
+    <section id="hipotesis" class="card animate-fade-in" style="animation-delay: 0.3s">
+      <h2>Prueba de Hipótesis</h2>
+      <h3>Definición</h3>
+      <p>
+        Es un procedimiento estadístico para decidir si la evidencia muestral es suficiente para rechazar una afirmación (hipótesis nula) sobre un parámetro poblacional.
+      </p>
+      <h3>Tipos de hipótesis</h3>
+      <ul>
+        <li><strong>Hipótesis nula (H<sub>0</sub>):</strong> declaración de no efecto o igualdad (p. ej., μ = μ<sub>0</sub>).</li>
+        <li><strong>Hipótesis alternativa (H<sub>1</sub> o H<sub>a</sub>):</strong> plantea diferencia o efecto (p. ej., μ ≠ μ<sub>0</sub>, μ &gt; μ<sub>0</sub>, μ &lt; μ<sub>0</sub>).</li>
+      </ul>
+      <h3>Nivel de significancia (α) y regiones de rechazo</h3>
+      <p>
+        El <strong>nivel α</strong> controla la probabilidad de <em>error tipo I</em> (rechazar H<sub>0</sub> siendo verdadera). La <em>región crítica</em> se define por valores extremos del estadístico:
+      </p>
+      <ul>
+        <li>Prueba bilateral (H<sub>1</sub>: ≠): colas en ±z<sub>α/2</sub>.</li>
+        <li>Prueba unilateral derecha (H<sub>1</sub>: &gt;): cola en +z<sub>α</sub>.</li>
+        <li>Prueba unilateral izquierda (H<sub>1</sub>: &lt;): cola en −z<sub>α</sub>.</li>
+      </ul>
+      <h3>Fórmulas</h3>
+      <ul>
+        <li><strong>Media (σ conocido, Z):</strong> z = ( x̄ − μ<sub>0</sub> ) / ( σ / √n )</li>
+        <li><strong>Media (σ desconocido, t):</strong> t = ( x̄ − μ<sub>0</sub> ) / ( s / √n ), gl = n − 1</li>
+        <li><strong>Proporción (Z):</strong> z = ( p̂ − p<sub>0</sub> ) / √( p<sub>0</sub>(1 − p<sub>0</sub>) / n )</li>
+      </ul>
+      <h3>Pasos del procedimiento</h3>
+      <ol>
+        <li>Plantear H<sub>0</sub> y H<sub>a</sub>.</li>
+        <li>Elegir α y el tipo de prueba (bilateral, derecha, izquierda).</li>
+        <li>Calcular el estadístico de prueba (z o t).</li>
+        <li>Obtener p-valor o comparar con el valor crítico.</li>
+        <li>Decidir: si p ≤ α, <strong>rechazar</strong> H<sub>0</sub>; en caso contrario, <strong>no rechazar</strong> H<sub>0</sub>.</li>
+        <li>Interpretar el resultado en el contexto del problema.</li>
+      </ol>
+      <h3>Ejemplo numérico breve (Z para media)</h3>
+      <p>
+        Suponga n = 36, x̄ = 102, σ = 12 y μ<sub>0</sub> = 100, α = 0.05 (bilateral). Entonces z = (102 − 100)/(12/√36) = 2/(2) = 1.00. El p-valor ≈ 0.317 > 0.05; no hay evidencia para rechazar H<sub>0</sub>.
+      </p>
+      <div class="result">
+        <div>Usa la calculadora en la sección Herramientas Prácticas para experimentar con tus propios datos y visualizar regiones críticas.</div>
+      </div>
+    </section>
+
+    <section id="confiabilidad" class="card animate-fade-in" style="animation-delay: 0.4s">
+      <h2>Confiabilidad</h2>
+      <h3>Definición y propósito</h3>
+      <p>
+        La <strong>confiabilidad</strong> es el grado en que un instrumento produce resultados consistentes y libres de error aleatorio. Un instrumento confiable aumenta la estabilidad y reproducibilidad de las mediciones.
+      </p>
+      <h3>Métodos de estimación</h3>
+      <ul>
+        <li><strong>Test–retest:</strong> aplicar el mismo test dos veces y correlacionar resultados.</li>
+        <li><strong>Mitades partidas (split–half):</strong> correlacionar dos mitades equivalentes del test.</li>
+        <li><strong>Alfa de Cronbach (α):</strong> consistencia interna para ítems politómicos.</li>
+        <li><strong>Kuder–Richardson (KR-20 / KR-21):</strong> variantes para ítems dicotómicos.</li>
+      </ul>
+      <h3>Rangos de interpretación (orientativos)</h3>
+      <ul>
+        <li>α ≥ 0.90: excelente</li>
+        <li>0.80 ≤ α &lt; 0.90: bueno</li>
+        <li>0.70 ≤ α &lt; 0.80: aceptable</li>
+        <li>0.60 ≤ α &lt; 0.70: cuestionable</li>
+        <li>0.50 ≤ α &lt; 0.60: pobre</li>
+        <li>α &lt; 0.50: inaceptable</li>
+      </ul>
+      <h3>Aplicación práctica</h3>
+      <p>
+        Con datos de respuestas por ítem (por ejemplo, escala Likert 1–5), el α de Cronbach puede estimarse con:
+      </p>
+      <p style="font-family: ui-monospace, monospace; background: rgba(255,255,255,.04); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08)">
+        α = (k/(k−1)) · (1 − Σ Var(item) / Var(puntaje total))
+      </p>
+      <p>
+        Donde k es el número de ítems. En la sección Herramientas Prácticas encontrarás una calculadora para α que acepta una matriz de respuestas.
+      </p>
+    </section>
+
+    <section id="herramientas" class="card animate-fade-in" style="animation-delay: 0.5s">
+      <h2>Herramientas Prácticas</h2>
+      <p>Utiliza estas herramientas interactivas para aplicar los conceptos aprendidos y resolver problemas estadísticos reales.</p>
+
+      <div class="grid grid-2">
+        <div class="card" style="background: rgba(108,197,255,.06)">
+          <h3>Calculadora de Prueba de Hipótesis Z</h3>
+          <p><strong>Casos de uso:</strong> Comparar medias poblacionales cuando se conoce la desviación estándar, evaluar si una muestra difiere significativamente de un valor esperado, o analizar proporciones en estudios de mercado o investigación social.</p>
+          
+          <div class="calc">
+            <div class="row">
+              <div>
+                <label>Tipo de prueba</label>
+                <select id="testType" onchange="syncTestFields()">
+                  <option value="mean_z">Media (σ conocido) — Z</option>
+                  <option value="prop_z">Proporción — Z</option>
+                </select>
+              </div>
+              <div>
+                <label>Nivel de significancia (α)</label>
+                <div class="flex">
+                  <input type="range" id="alphaRange" min="0.01" max="0.10" step="0.01" value="0.05" oninput="alpha.value = alphaRange.value; drawNormal()" />
+                  <input type="number" id="alpha" step="0.01" value="0.05" oninput="alphaRange.value = alpha.value; drawNormal()" />
+                </div>
+              </div>
+              <div>
+                <label>Tipo de cola</label>
+                <select id="tail" onchange="drawNormal()">
+                  <option value="two">Bilateral (≠)</option>
+                  <option value="right">Unilateral derecha (&gt;)</option>
+                  <option value="left">Unilateral izquierda (&lt;)</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="fields_mean" class="row">
+              <div>
+                <label>Tamaño muestral (n)</label>
+                <input id="n_mean" type="number" min="2" value="36" />
+              </div>
+              <div>
+                <label>Media muestral (x̄)</label>
+                <input id="xbar" type="number" step="0.0001" value="102" />
+              </div>
+              <div>
+                <label>Desv. poblacional (σ)</label>
+                <input id="sigma" type="number" step="0.0001" value="12" />
+              </div>
+              <div>
+                <label>Media hipotética (μ₀)</label>
+                <input id="mu0" type="number" step="0.0001" value="100" />
+              </div>
+            </div>
+
+            <div id="fields_prop" class="row" style="display:none">
+              <div>
+                <label>Tamaño muestral (n)</label>
+                <input id="n_prop" type="number" min="2" value="200" />
+              </div>
+              <div>
+                <label>Número de éxitos (x)</label>
+                <input id="x_success" type="number" min="0" value="110" />
+              </div>
+              <div>
+                <label>Proporción hipotética (p₀)</label>
+                <input id="p0" type="number" min="0" max="1" step="0.0001" value="0.5" />
+              </div>
+            </div>
+
+            <div class="flex">
+              <button class="btn" onclick="runHypothesis()">Calcular</button>
+              <button class="btn alt" onclick="fillExample()">Cargar ejemplo</button>
+              <button class="btn danger" onclick="clearHypothesis()">Limpiar</button>
+            </div>
+
+            <div class="result" id="hypo_out">
+              <div class="big">Resultado</div>
+              <div id="hypo_detail" style="margin-top:6px; color: var(--muted);">Ingresa datos y presiona Calcular.</div>
+            </div>
+
+            <canvas id="normalCanvas" height="220"></canvas>
+          </div>
+        </div>
+
+        <div class="card" style="background: rgba(155,255,210,.06)">
+          <h3>Calculadora de Confiabilidad: α de Cronbach</h3>
+          <p><strong>Casos de uso:</strong> Evaluar la consistencia interna de cuestionarios, encuestas o tests psicométricos. Útil para validar instrumentos de investigación en psicología, educación, ciencias sociales o estudios de mercado.</p>
+          
+          <div class="calc">
+            <p>Introduce una matriz de respuestas (filas = personas, columnas = ítems). Separadores aceptados: coma, punto y coma, espacio o tabulación.</p>
+            <textarea id="cronbach_data" placeholder="Ejemplo:
+4,3,5,4
+3,4,4,5
+5,4,5,4
+3,2,4,3"></textarea>
+            <div class="flex">
+              <button class="btn" onclick="runCronbach()">Calcular α</button>
+              <button class="btn alt" onclick="loadCronbachSample()">Cargar ejemplo</button>
+              <button class="btn danger" onclick="document.getElementById('cronbach_data').value=''; document.getElementById('cronbach_out').innerHTML='';">Limpiar</button>
+            </div>
+            <div class="result" id="cronbach_out"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>UPTAG — PNFI — Tema #3: Prueba de Hipótesis y Confiabilidad</div>
+    <div style="margin-top:6px">Frank Peña - T3-T1 - Sección #34 - Prof. Airam Colina</div>
+  </footer>
+
+  <script>
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    // Barra de progreso
+    window.addEventListener('scroll', () => {
+      const winHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.pageYOffset;
+      const trackLength = docHeight - winHeight;
+      const progress = Math.floor(scrollTop / trackLength * 100);
+      document.getElementById('progressBar').style.width = progress + '%';
+    });
+
+    // Animaciones de entrada
+    document.addEventListener('DOMContentLoaded', () => {
+      const animatedElements = document.querySelectorAll('.animate-fade-in');
+      animatedElements.forEach(el => {
+        const delay = el.style.animationDelay || '0s';
+        el.style.animationDelay = delay;
+      });
+    });
+
+    // =====================
+    // Utilidades matemáticas
+    // =====================
+    // Aproximación erf (Abramowitz y Stegun 7.1.26)
+    function erf(x){
+      const sign = Math.sign(x);
+      x = Math.abs(x);
+      const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429;
+      const p=0.3275911;
+      const t=1/(1+p*x);
+      const y=1-((((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t)*Math.exp(-x*x);
+      return sign*y;
+    }
+    function phi(x){ return 0.5*(1+erf(x/Math.SQRT2)); } // CDF Normal estándar
+    function pdf(x){ return Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI); }
+
+    // Inversa de la normal (Acklam)
+    function normalInv(p){
+      if(p<=0||p>=1) return NaN;
+      const a=[-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02, 1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+      const b=[-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02, 6.680131188771972e+01, -1.328068155288572e+01];
+      const c=[-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00, -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+      const d=[7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
+      const plow=0.02425, phigh=1-plow; let q, r;
+      if(p < plow){
+        q=Math.sqrt(-2*Math.log(p));
+        return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+      }
+      if(phigh < p){
+        q=Math.sqrt(-2*Math.log(1-p));
+        return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+      }
+      q = p-0.5; r=q*q;
+      return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/
+             (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+    }
+
+    // =====================
+    // Visual de distribución normal y regiones críticas
+    // =====================
+    function drawNormal(){
+      const c = document.getElementById('normalCanvas'); 
+      if(!c) return; 
+      const ctx = c.getContext('2d');
+      const W=c.width, H=c.height; 
+      ctx.clearRect(0,0,W,H);
+      const alpha = parseFloat(document.getElementById('alpha').value||'0.05');
+      const tail = document.getElementById('tail').value;
+
+      // Fondo con gradiente
+      const gradient = ctx.createLinearGradient(0, 0, W, 0);
+      gradient.addColorStop(0, 'rgba(108,197,255,0.05)');
+      gradient.addColorStop(0.5, 'rgba(155,255,210,0.05)');
+      gradient.addColorStop(1, 'rgba(108,197,255,0.05)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0,0,W,H);
+
+      // Ejes
+      ctx.strokeStyle='rgba(255,255,255,0.2)'; 
+      ctx.lineWidth=1; 
+      ctx.beginPath(); 
+      ctx.moveTo(0,H-20); 
+      ctx.lineTo(W,H-20); 
+      ctx.stroke();
+
+      // Curva normal (x en [-4,4])
+      const toXY = (x, y) => {
+        const X = (x+4)/8 * W;
+        const Y = (1-y/0.42) * (H-30); // 0.42 aprox max pdf
+        return [X, Y];
+      };
+      
+      // Sombra bajo la curva
+      ctx.fillStyle='rgba(108,197,255,0.1)';
+      ctx.beginPath();
+      ctx.moveTo(toXY(-4,0)[0], H-20);
+      for(let i=0;i<=400;i++){
+        const x = -4 + 8*i/400; 
+        const y = pdf(x); 
+        const [X,Y]=toXY(x,y); 
+        ctx.lineTo(X,Y);
+      }
+      ctx.lineTo(toXY(4,0)[0], H-20);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Curva normal
+      ctx.strokeStyle='rgba(108,197,255,0.9)'; 
+      ctx.lineWidth=3; 
+      ctx.beginPath();
+      for(let i=0;i<=400;i++){
+        const x = -4 + 8*i/400; 
+        const y = pdf(x); 
+        const [X,Y]=toXY(x,y); 
+        if(i===0) ctx.moveTo(X,Y); 
+        else ctx.lineTo(X,Y);
+      }
+      ctx.stroke();
+
+      // Calcular z críticos
+      let zL=null, zR=null;
+      if(tail==='two'){ zL = normalInv(alpha/2); zR = normalInv(1-alpha/2); }
+      if(tail==='left'){ zL = normalInv(alpha); }
+      if(tail==='right'){ zR = normalInv(1-alpha); }
+
+      // Sombreado de regiones críticas
+      ctx.fillStyle='rgba(255,107,107,0.35)';
+      function shade(fromX, toX){
+        const step=0.02; ctx.beginPath();
+        ctx.moveTo(toXY(fromX,0)[0], H-20);
+        for(let x=fromX; x<=toX; x+=step){ 
+          const y=pdf(x); 
+          const [X,Y]=toXY(x,y); 
+          ctx.lineTo(X,Y); 
+        }
+        const [XE,YE]=toXY(toX,pdf(toX)); 
+        ctx.lineTo(XE,H-20); 
+        ctx.closePath(); 
+        ctx.fill();
+      }
+      if(zL!==null){ shade(-4, zL); }
+      if(zR!==null){ shade(zR, 4); }
+
+      // Marcas z
+      ctx.fillStyle='rgba(255,255,255,0.8)'; 
+      ctx.font='12px system-ui'; 
+      ctx.textAlign='center';
+      if(zL!==null){ 
+        const [X] = toXY(zL,0); 
+        ctx.fillRect(X,0,1,H-20); 
+        ctx.fillText('z = '+zL.toFixed(2), X, 12); 
+      }
+      if(zR!==null){ 
+        const [X] = toXY(zR,0); 
+        ctx.fillRect(X,0,1,H-20); 
+        ctx.fillText('z = '+zR.toFixed(2), X, 12); 
+      }
+      
+      // Etiqueta de área de rechazo
+      ctx.fillStyle='rgba(255,107,107,0.8)';
+      ctx.font='bold 12px system-ui';
+      if(tail === 'two' && zL !== null && zR !== null) {
+        ctx.fillText('Área de rechazo', toXY(zL-1, pdf(zL-1))[0], toXY(zL-1, pdf(zL-1))[1]-10);
+        ctx.fillText('Área de rechazo', toXY(zR+1, pdf(zR+1))[0], toXY(zR+1, pdf(zR+1))[1]-10);
+      } else if (tail === 'left' && zL !== null) {
+        ctx.fillText('Área de rechazo', toXY(zL-1.5, pdf(zL-1.5))[0], toXY(zL-1.5, pdf(zL-1.5))[1]-10);
+      } else if (tail === 'right' && zR !== null) {
+        ctx.fillText('Área de rechazo', toXY(zR+1.5, pdf(zR+1.5))[0], toXY(zR+1.5, pdf(zR+1.5))[1]-10);
+      }
+    }
+
+    // =====================
+    // Calculadora de hipótesis (Z)
+    // =====================
+    function syncTestFields(){
+      const t = document.getElementById('testType').value;
+      document.getElementById('fields_mean').style.display = (t==='mean_z') ? 'grid' : 'none';
+      document.getElementById('fields_prop').style.display = (t==='prop_z') ? 'grid' : 'none';
+      drawNormal();
+    }
+
+    function fillExample(){
+      const t = document.getElementById('testType').value;
+      if(t==='mean_z'){
+        document.getElementById('n_mean').value = 36;
+        document.getElementById('xbar').value = 102;
+        document.getElementById('sigma').value = 12;
+        document.getElementById('mu0').value = 100;
+        document.getElementById('alpha').value = 0.05; 
+        document.getElementById('alphaRange').value = 0.05;
+        document.getElementById('tail').value = 'two';
+      } else {
+        document.getElementById('n_prop').value = 200;
+        document.getElementById('x_success').value = 110;
+        document.getElementById('p0').value = 0.5;
+        document.getElementById('alpha').value = 0.05; 
+        document.getElementById('alphaRange').value = 0.05;
+        document.getElementById('tail').value = 'two';
+      }
+      drawNormal();
+    }
+
+    function clearHypothesis(){
+      document.getElementById('hypo_out').querySelector('#hypo_detail').innerHTML = 'Ingresa datos y presiona Calcular.';
+    }
+
+    function runHypothesis(){
+      const alpha = parseFloat(document.getElementById('alpha').value||'0.05');
+      const tail = document.getElementById('tail').value;
+      const type = document.getElementById('testType').value;
+      let z, p, desc='';
+
+      if(type==='mean_z'){
+        const n = parseFloat(document.getElementById('n_mean').value);
+        const xbar = parseFloat(document.getElementById('xbar').value);
+        const sigma = parseFloat(document.getElementById('sigma').value);
+        const mu0 = parseFloat(document.getElementById('mu0').value);
+        if(!(n>1 && isFinite(xbar) && sigma>0 && isFinite(mu0))){ 
+          return alert('Verifica los datos de media (n>1, σ>0).'); 
+        }
+        z = (xbar - mu0)/(sigma/Math.sqrt(n));
+        desc = `Prueba Z para media con σ conocido. z = (x̄ - μ₀)/(σ/√n)`;
+      } else {
+        const n = parseFloat(document.getElementById('n_prop').value);
+        const x = parseFloat(document.getElementById('x_success').value);
+        const p0 = parseFloat(document.getElementById('p0').value);
+        if(!(n>1 && x>=0 && x<=n && p0>0 && p0<1)){ 
+          return alert('Verifica los datos de proporción (0<p₀<1, 0≤x≤n).'); 
+        }
+        const phat = x/n;
+        z = (phat - p0)/Math.sqrt(p0*(1-p0)/n);
+        desc = `Prueba Z para proporción. z = (p̂ - p₀)/√(p₀(1-p₀)/n)`;
+      }
+
+      if(tail==='two') p = 2*(1 - phi(Math.abs(z)));
+      if(tail==='right') p = 1 - phi(z);
+      if(tail==='left') p = phi(z);
+
+      const reject = (p <= alpha);
+      const decision = reject ? 
+        `<span class="btn danger" style="pointer-events:none">Rechazar H₀</span>` : 
+        `<span class="btn good" style="pointer-events:none">No rechazar H₀</span>`;
+      const msg = `
+        <div style="margin-bottom:6px">${desc}</div>
+        <div>Estadístico: <strong>z = ${z.toFixed(4)}</strong></div>
+        <div>p-valor: <strong>${(p).toFixed(4)}</strong> | α = <strong>${alpha}</strong> | Cola: <strong>${tail}</strong></div>
+        <div style="margin-top:8px">Decisión: ${decision}</div>
+        <div style="margin-top:8px; color: var(--muted)">
+          Regla: si p ≤ α, rechazar H₀; en caso contrario, no rechazar H₀. Verifica supuestos (independencia, normalidad/aproximación) antes de concluir.
+        </div>
+      `;
+      document.getElementById('hypo_out').querySelector('#hypo_detail').innerHTML = msg;
+      
+      // Animación de resultado
+      const resultElement = document.getElementById('hypo_out');
+      resultElement.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        resultElement.style.transform = 'scale(1)';
+      }, 150);
+    }
+
+    // =====================
+    // Cronbach alpha
+    // =====================
+    function parseMatrix(text){
+      const rows = text.trim().split(/\n+/).map(r => r.trim()).filter(r => r.length>0);
+      if(rows.length===0) return [];
+      const matrix = rows.map(r => r.split(/[;,\t\s]+/).map(Number).filter(v => !Number.isNaN(v)));
+      const width = Math.max(...matrix.map(r => r.length));
+      const clean = matrix.filter(r => r.length===width);
+      return clean;
+    }
+
+    function variance(arr){
+      const n = arr.length; 
+      if(n<=1) return 0;
+      const mean = arr.reduce((a,b)=>a+b,0)/n;
+      const v = arr.reduce((s,x)=>s+(x-mean)*(x-mean),0)/(n-1);
+      return v;
+    }
+
+    function runCronbach(){
+      const text = document.getElementById('cronbach_data').value || '';
+      const X = parseMatrix(text);
+      if(X.length<2){ 
+        document.getElementById('cronbach_out').innerHTML = '<em>Ingresa al menos 2 filas de datos con igual número de columnas.</em>'; 
+        return; 
+      }
+      const n = X.length; 
+      const k = X[0].length;
+      // Varianzas por ítem
+      const itemVars = [];
+      for(let j=0;j<k;j++){
+        const col = X.map(row => row[j]);
+        itemVars.push(variance(col));
+      }
+      // Puntaje total por persona
+      const totals = X.map(row => row.reduce((a,b)=>a+b,0));
+      const varTotal = variance(totals);
+      const sumItemVar = itemVars.reduce((a,b)=>a+b,0);
+      const alpha = (k/(k-1)) * (1 - (sumItemVar/varTotal));
+
+      let interpret = '—';
+      if(alpha>=0.9) interpret='excelente';
+      else if(alpha>=0.8) interpret='bueno';
+      else if(alpha>=0.7) interpret='aceptable';
+      else if(alpha>=0.6) interpret='cuestionable';
+      else if(alpha>=0.5) interpret='pobre';
+      else interpret='inaceptable';
+
+      const html = `
+        <div><strong>α de Cronbach = ${alpha.toFixed(4)}</strong> (<em>${interpret}</em>)</div>
+        <div style="color: var(--muted); margin-top:6px">
+          k = ${k} ítems, n = ${n} personas. ΣVar(item) = ${sumItemVar.toFixed(4)}, Var(total) = ${varTotal.toFixed(4)}.
+        </div>
+      `;
+      document.getElementById('cronbach_out').innerHTML = html;
+      
+      // Animación de resultado
+      const resultElement = document.getElementById('cronbach_out');
+      resultElement.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        resultElement.style.transform = 'scale(1)';
+      }, 150);
+    }
+
+    function loadCronbachSample(){
+      const sample = [
+        [4,3,5,4],
+        [3,4,4,5],
+        [5,4,5,4],
+        [3,2,4,3],
+        [4,3,4,4]
+      ];
+      const text = sample.map(r => r.join(',')).join('\n');
+      document.getElementById('cronbach_data').value = text;
+      runCronbach();
+    }
+
+    // Inicializar
+    window.addEventListener('load', ()=>{ 
+      drawNormal(); 
+      loadCronbachSample(); 
+      syncTestFields();
+      
+      // Aplicar animaciones de entrada
+      const elements = document.querySelectorAll('.animate-fade-in');
+      elements.forEach((el, index) => {
+        el.style.animationDelay = `${0.1 + index * 0.1}s`;
+      });
+    });
+  </script>
+</body>
+</html>
